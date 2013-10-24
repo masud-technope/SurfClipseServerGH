@@ -30,11 +30,12 @@ public class SearchResultProvider {
 		this.stackTrace=stackTrace;
 		this.sourceCodeContext=sourceCodeContext;
 		this.recentPageData=recentPageData;
-		this.search=new SurfClipseSearch();
+		//this.search=new SurfClipseSearch();
+		
 		//collect data from search engines
 		//===========================
 		//commented temporarily
-		//this.search=new SurfClipseSearch(this.searchQuery);
+		this.search=new SurfClipseSearch(this.searchQuery);
 		//================================
 	}
 	
@@ -42,18 +43,15 @@ public class SearchResultProvider {
 	public ArrayList<Result> provide_the_final_results() {
 		// code for providing the final results
 		// merge the results
-		
 		//===========================
 		//commented temporarily
-		//ResultEntryMerger merger = new ResultEntryMerger(search.Google_Results,
-		//		search.Bing_Results, search.Yahoo_Results, search.SO_Results);
+		ResultEntryMerger merger = new ResultEntryMerger(search.Google_Results,
+				search.Bing_Results, search.Yahoo_Results, search.SO_Results);
 		
-		//search.my_big_array = merger.merge();
+		search.my_big_array = merger.merge();
 		//================================
 		
-		
-		search.my_big_array = SResultIndexBuilder.load_sresult_index(currentException);
-		
+		//search.my_big_array = SResultIndexBuilder.load_sresult_index(currentException);
 		
 		// do the processing for score calculation
 		search.my_big_array = perform_parallel_score_computation(search);

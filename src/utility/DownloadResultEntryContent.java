@@ -26,6 +26,7 @@ public class DownloadResultEntryContent {
 		String temp = new String();
 		try {
 			String resultURL = "http://stackoverflow.com/questions/17003576/json-data-to-net-class";
+			check_and_proceed_file_size(resultURL);
 			URL url = new URL(resultURL);
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					url.openStream()));
@@ -77,6 +78,55 @@ public class DownloadResultEntryContent {
 		} catch (Exception exc) {
 		}
 		return response;
+	}
+	
+	
+	protected boolean check_and_proceed_file_size(String resultURL)
+	{
+		//code for checking header size
+		boolean proceed=false;
+		try
+		{
+		URL u=new URL(resultURL);
+		String headerContent=new String();
+		HttpURLConnection conn=(HttpURLConnection) u.openConnection();
+		conn.setRequestMethod("HEAD");
+		if(conn.getResponseCode()==HttpURLConnection.HTTP_OK)
+		{
+			conn.getInputStream();
+			long length=conn.getContentLengthLong();
+			System.out.println(headerContent);
+		}
+		}catch(Exception exc){
+		}
+		return proceed;
+	}
+	
+	
+
+	protected String download_page_content(String resultURL)
+	{
+		String temp = new String();
+		try {
+			// code for downloading page content
+			URL u = new URL(resultURL);
+			HttpURLConnection connection = (HttpURLConnection) u
+					.openConnection();
+			connection.setConnectTimeout(5000); //setting connect time out
+			connection.addRequestProperty("Content-Type",
+					"text/html;charset=utf-8");
+			connection.setRequestMethod("GET");
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				BufferedReader br = new BufferedReader(new InputStreamReader(
+						connection.getInputStream()));
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					temp += line + "\n";
+				}
+			}
+		} catch (Exception exc) {
+		}
+		return temp;
 	}
 	
 	
@@ -150,12 +200,9 @@ public class DownloadResultEntryContent {
 		blackList.add("http://www.findjar.com/index.x?query=invalidcontentexception");
 		
 		
-		
-
 		String[] extension = new String[] { "pdf", "txt", "doc", "docx", "jar",
 				"ppt", "flv","mov","avi", "zip", "gz", "tar","xml","log" };
 
-		//for (int i=0;i<10;i++)
 		for (Result result : this.EntryList) 
 		{
 			//Result result=this.EntryList.get(i);
@@ -166,20 +213,10 @@ public class DownloadResultEntryContent {
 					if (!contained_in_black_list(blackList, resultURL)) {
 						if (!invalid_extension(extension, resultURL)) {
 							String temp = new String();
-							URL u = new URL(resultURL);
-							HttpURLConnection connection = (HttpURLConnection) u
-									.openConnection();
-							connection.addRequestProperty("Content-Type",
-									"text/html;charset=utf-8");
-							connection.setRequestMethod("GET");
-							if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-								BufferedReader br = new BufferedReader(
-										new InputStreamReader(
-												connection.getInputStream()));
-								String line = null;
-								while ((line = br.readLine()) != null) {
-									temp += line + "\n";
-								}
+							try
+							{
+								temp=download_page_content(resultURL);
+							}catch(Exception exc){
 							}
 							result.resultContent = temp;
 						}
@@ -200,8 +237,8 @@ public class DownloadResultEntryContent {
 		ArrayList<Result> test=new ArrayList<>();
 		test.add(result);
 		DownloadResultEntryContent dre=new DownloadResultEntryContent(test);
-		dre.download_result_entry_content();
-		//dre.test_download();
+		//dre.download_result_entry_content();
+		dre.test_download();
 	}
 
 }

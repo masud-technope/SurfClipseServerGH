@@ -100,6 +100,7 @@ public class Surfclipse_appServlet extends HttpServlet {
 			jsonObj.put("contentscore", result.content_score);
 			jsonObj.put("contextscore", result.context_score);
 			jsonObj.put("popularityscore", result.popularity_score);
+			jsonObj.put("confidence", result.search_result_confidence);
 			//jsonObj.put("desctext", URLEncoder.encode(result.representativeText,"UTF-8"));
 			items.add(jsonObj);
 			rank++;

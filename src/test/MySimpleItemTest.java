@@ -51,12 +51,17 @@ public class MySimpleItemTest {
 	public ArrayList<Result> perform_overall_test()
 	{
 		//code for all calculation
-		get_result_lists(queryTitle);
+		/*get_result_lists(queryTitle);
 		ScoreCalculator calc=new ScoreCalculator(this.Primary_Results, queryTitle, stackTrace, codeContext, recentPageData);
 		this.Primary_Results=calc.calculate_intermediate_scores();
 		ResultScoreManager manager=new ResultScoreManager(this.Primary_Results);
 		manager.calculate_relative_scores();
-		return manager.prerpare_final_score();
+		return manager.prerpare_final_score();*/
+		
+		SearchResultProvider provider=new SearchResultProvider(queryTitle, stackTrace,codeContext,recentPageData);
+		ArrayList<Result> results=provider.provide_the_final_results();
+		return results;
+		
 		//showing scores
 		//show_all_scores(this.Primary_Results.get(0));	  
 	}
@@ -105,7 +110,7 @@ public class MySimpleItemTest {
 		System.out.println("Total results extracted:"+results.size());
 		long ended=System.currentTimeMillis();
 		System.out.println("Time elapsed:"+(ended-started)/1000+" seconds");
-		show_all_scores(results);
+		//show_all_scores(results);
 		}catch(Exception exc){}
 		
 	}
