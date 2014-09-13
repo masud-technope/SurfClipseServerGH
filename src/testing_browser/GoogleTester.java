@@ -66,12 +66,13 @@ public class GoogleTester {
 			}
 		}catch(Exception exc){}
 	}
-	protected void collect_google_solutions()
+	protected void collect_google_solutions(String engine)
 	{
 		//code for collecting google solutions
 		try
 		{
-			String path=StaticData.Lucene_Data_Base+"/completeds/browser/Reserve/SO";
+			//String path=StaticData.Lucene_Data_Base+"/completeds/browser/"+engine;
+			String path=StaticData.QCDataset+"/"+engine+"/results";
 			File f=new File(path);
 			if(f.isDirectory())
 			{
@@ -95,9 +96,10 @@ public class GoogleTester {
 					scanner.close();
 					//now add the arraylist to hmap
 					this.googleSolution.put(f1.getName(), temp);
+					this.total_solution+=this.orginalSolution.get(f1.getName()).size();
+					
 					System.out.println(f1.getName()+"="+temp.size());
-					}catch(Exception exc){
-						
+					}catch(Exception exc){	
 					}
 				}
 			}
@@ -180,7 +182,7 @@ public class GoogleTester {
 			}
 		}
 		solution_retrieved+=retrieved_relevant_items;
-		total_solution+=solutionList.size();
+		//total_solution+=solutionList.size();
 		
 		if(retrieved_relevant_items==0)return 0;
 		
@@ -224,7 +226,8 @@ public class GoogleTester {
 			//int K=30;
 			double patk=calculate_precision_at_k(K, glist, slist);
 			if(patk>0){answer_found++;}
-			System.out.println(key+": Precision at "+K+" "+patk);
+			else System.err.println(key);
+			//System.out.println(key+": Precision at "+K+" "+patk);
 			//System.out.println(key);
 			sum+=patk;
 		}
@@ -335,7 +338,7 @@ public class GoogleTester {
 		//code for collecting google solutions
 		try
 		{
-			String path=StaticData.Lucene_Data_Base+"/completeds/browser/Reserve/"+engine;
+			String path=StaticData.Lucene_Data_Base+"/completeds/browser/"+engine;
 			File f=new File(path);
 			if(f.isDirectory())
 			{
@@ -476,14 +479,17 @@ public class GoogleTester {
 		// TODO Auto-generated method stub
 		GoogleTester tester=new GoogleTester();
 		tester.collect_org_solutions();
-		tester.collect_google_solutions();
-		int K=30;
+		tester.collect_google_solutions("proposed");
+		int K=20;
 		//tester.analyze_the_dataset();
-		tester.calculate_mean_precision(K);
+		//tester.calculate_mean_precision(K);
 		tester.calculate_mean_avg_precision(K);
 		tester.calculate_mean_recall(K);
-		tester.calculate_avg_fff_position();
-		tester.calculate_avg_ftp_rank();
-		//System.out.println("Total solution: "+tester.total_solution+", Solution retrieved:"+tester.solution_retrieved);
+		//tester.calculate_avg_fff_position();
+		//tester.calculate_avg_ftp_rank();
+		System.out.println("Total solution: "+tester.
+				
+				total_solution+", Solution retrieved:"+tester.solution_retrieved);
+		System.out.println("Total recall:"+((double)tester.solution_retrieved)/tester.total_solution);
 	}
 }

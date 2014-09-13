@@ -43,7 +43,6 @@ public class Surfclipse_appServlet extends HttpServlet {
 			this.stackTrace=URLDecoder.decode(this.stackTrace, charset);
 			this.codeContext=URLDecoder.decode(this.codeContext, charset);
 			this.recentPageData=URLDecoder.decode(this.recentPageData,charset);
-			
 		}catch(Exception exc){
 		}
 		

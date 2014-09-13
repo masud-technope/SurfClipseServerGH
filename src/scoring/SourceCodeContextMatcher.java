@@ -130,7 +130,7 @@ public class SourceCodeContextMatcher {
 		} catch (Exception exc) {
 		}
 
-		ResultTitleMatcher titleMatcher = new ResultTitleMatcher(results, query);
+		ResultTitleMatcher titleMatcher = new ResultTitleMatcher(results, query, " " );
 		ArrayList<Result> results1 = titleMatcher.calculate_title_match_score();
 		SourceCodeContextMatcher matcher = new SourceCodeContextMatcher(
 				results1, codeContext);

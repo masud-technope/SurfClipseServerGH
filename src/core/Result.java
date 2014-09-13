@@ -3,27 +3,32 @@ package core;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
 //code for Search Results
 
 public class Result implements Serializable {
 	//attributes of a result entry
-	public String title;
-	public String description;
-	public String resultURL;
-	
+	public String title=new String();
+	public String description=new String();
+	public String resultURL=new String();
 	
 	//rank
 	public long alexaRank=-1;
 	public long competeRank=-1;
 	public double averageRank=-1;
 	
-	//scores
+	//rank in search engine
+	public int googleRank=0;
+	public int BingRank=0;
+	public int YahooRank=0;
+	public int SORank=0;
+	public double avgSearchRank=0;
+	public int frequency=0;
 	
 	//content related
 	public double title_title_MatchScore=0;
 	public double title_codestack_MathScore=0;
 	public double title_content_MatchScore=0;
+	public double title_description_MatchScore=0;
 	
 	//context related
 	public double stackTraceContentMatchScore=0;
@@ -60,7 +65,5 @@ public class Result implements Serializable {
 	public String textContent=new String();
 	public String representativeText=new String();
 	public double max_matching_score=0;
-	
-	
 	
 }

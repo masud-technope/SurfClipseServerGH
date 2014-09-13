@@ -38,8 +38,14 @@ public class BingJSONDecoder {
 				
 				//creating the object
 				Result myresult=new Result();
-				myresult.title=jsobj.get("Title").toString();
-				myresult.description=jsobj.get("Description").toString();
+				//title
+				String title=jsobj.get("Title").toString();
+				myresult.title=title.replaceAll("\\<.*?>","");
+				//description
+				String description=jsobj.get("Description").toString();
+				description=description.replaceAll("\\<.*?>","");
+				myresult.description=description;
+				
 				myresult.resultURL=jsobj.get("Url").toString();
 				//adding to array list
 				searchResult.add(myresult);

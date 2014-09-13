@@ -36,11 +36,7 @@ public class YahooAPI2 {
 	/** Call Type */
 	private static final String callType = "web";
 	private static final int HTTP_STATUS_OK = 200;
-
-	/**
-	 * 
-	 * @return
-	 */
+	private static int COUNT=20;
 
 	private String searchQuery = "";
 	public YahooAPI2() {
@@ -78,8 +74,11 @@ public class YahooAPI2 {
 			// adding format
 			// params=params.concat("&format=xml");
 			// Create final URL
+			params+="&count="+COUNT;
+			
+			
 			String url = yahooServer + params;
-			System.out.println("Sent the url >>" + url);
+			//System.out.println("Sent the url >>" + url);
 			// Create oAuth Consumer
 			OAuthConsumer consumer = new DefaultOAuthConsumer(consumer_key,consumer_secret);
 			// Set the HTTP request correctly

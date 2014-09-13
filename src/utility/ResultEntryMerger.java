@@ -42,8 +42,8 @@ public class ResultEntryMerger {
 		
 		// code for merging the results
 		HashMap<String, Result> urlmaps = new HashMap<String,Result>();
-		// adding google results
 		
+		// adding google results
 		int desired_size=0;
 		try
 		{
@@ -55,6 +55,9 @@ public class ResultEntryMerger {
 			{
 				//adding confidence score
 				result.search_result_confidence+=google_sew_score;
+				//adding the position
+				result.googleRank=(i+1);
+				result.frequency++;
 				//adding to Hash Map
 				urlmaps.put(resultURL.trim(), result);
 			}
@@ -73,11 +76,16 @@ public class ResultEntryMerger {
 			{
 				//adding confidence
 				result.search_result_confidence+=bing_sew_score;
+				//adding position
+				result.BingRank=(i+1);
+				result.frequency++;
 				//add to hash map
 				urlmaps.put(resultURL.trim(), result);
 			}else{
 				Result tempResult=urlmaps.get(resultURL);
 				tempResult.search_result_confidence+=bing_sew_score;
+				result.BingRank=(i+1);
+				result.frequency++;
 				urlmaps.put(resultURL,tempResult);
 			}
 		}
@@ -93,12 +101,17 @@ public class ResultEntryMerger {
 			{
 				//adding confidence
 				result.search_result_confidence+=yahoo_sew_score;
+				//adding yahoo rank
+				result.YahooRank=(i+1);
+				result.frequency++;
 				//add to hash map
 				urlmaps.put(resultURL.trim(), result);
 			}else
 			{
 				Result tempResult=urlmaps.get(resultURL);
 				tempResult.search_result_confidence+=yahoo_sew_score;
+				result.YahooRank=(i+1);
+				result.frequency++;
 				urlmaps.put(resultURL,tempResult);
 			}
 		}
@@ -113,12 +126,17 @@ public class ResultEntryMerger {
 			{
 				//adding confidence
 				result.search_result_confidence+=stackoverflow_sew_score;
+				//adding position
+				result.SORank=(i+1);
+				result.frequency++;
 				//add to hash map
 				urlmaps.put(resultURL.trim(), result);
 			}else
 			{
 				Result tempResult=urlmaps.get(resultURL);
 				tempResult.search_result_confidence+=stackoverflow_sew_score;
+				result.SORank=(i+1);
+				result.frequency++;
 				urlmaps.put(resultURL,tempResult);
 			}
 		}
@@ -127,12 +145,12 @@ public class ResultEntryMerger {
 		for(String key:urlmaps.keySet())
 		{
 			Result result=urlmaps.get(key);
+			//calculate the average position
+			result.avgSearchRank=((double)(result.googleRank+result.BingRank+result.YahooRank+result.SORank))/result.frequency;
 			this.Results_Collection.add(result);
 			System.out.println(result.resultURL);
 		}
-		
 		System.out.println("Total unique results:"+this.Results_Collection.size());
-		
 		return this.Results_Collection;
 	}
 	

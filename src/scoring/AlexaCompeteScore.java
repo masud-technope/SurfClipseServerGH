@@ -181,7 +181,7 @@ public class AlexaCompeteScore {
 			{
 				double rank_score = 1 - ((result_rank-1)/max_average_rank);
 				result2.AlexaCompeteRankScore = rank_score;
-				//System.out.println("AC score:"+rank_score);
+				System.out.println("AC score:"+rank_score);
 			}
 		}
 		}

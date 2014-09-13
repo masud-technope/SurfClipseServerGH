@@ -43,7 +43,8 @@ public class SOJSONDecoder {
 				//creating object
 				Result myresult=new Result();
 				//title
-				myresult.title=jsobj.get("title").toString();
+				String title=jsobj.get("title").toString();
+				myresult.title=title.replaceAll("\\<.*?>","");
 				//System.out.println(jsobj.get("title"));
 				String answer_url=jsobj.get("link").toString();
 				//answer_url=base_url+answer_url;

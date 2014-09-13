@@ -1,8 +1,9 @@
 package core;
 
-import indexmanager.SResultIndexBuilder;
-
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import org.apache.log4j.Logger;
 import scoring.ResultScoreManager;
 import scoring.ScoreCalculator;
@@ -60,6 +61,7 @@ public class SearchResultProvider {
 			ResultScoreManager manager = new ResultScoreManager(
 					search.my_big_array);
 			// calculate relative scores
+			//commented for testing
 			manager.calculate_relative_scores();
 			//prepare final scores
 			search.my_big_array = manager.prerpare_final_score();
@@ -81,7 +83,6 @@ public class SearchResultProvider {
 		ArrayList<Result> tempList=new ArrayList<Result>();
 		int endIndex=index+stepSize;
 		
-		
 		if(endIndex>totalLinks.size())endIndex=totalLinks.size();
 		for(int i=index;i<endIndex;i++)
 		{
@@ -93,11 +94,9 @@ public class SearchResultProvider {
 		return tempList;
 	}
 	
-	
-	
+
 	protected ArrayList<Result> perform_parallel_score_computation(SurfClipseSearch search)
-	{
-		
+	{		
 		// master result list
 		ArrayList<Result> masterList = new ArrayList<Result>();
 
@@ -125,6 +124,9 @@ public class SearchResultProvider {
 		
 		log.info("Processors found"+number_of_processors);
 
+		ExecutorService executor=Executors.newSingleThreadExecutor();
+		
+		
 		// parallelize the score computation
 		for (int i = 0; i < number_of_processors; i++) {
 			ArrayList<Result> tempList = provide_segmented_links(
@@ -133,10 +135,11 @@ public class SearchResultProvider {
 					this.searchQuery, this.stackTrace, this.sourceCodeContext, this.recentPageData);
 			Runnable runnable = scal;
 			Thread t = new Thread(runnable);
+			
 			t.setName("Thread: #"+i);
 			myThreads.add(t);
 			scals.add(scal);
-			t.setPriority(Thread.NORM_PRIORITY);
+			t.setPriority(Thread.MAX_PRIORITY);
 			t.start();
 			System.out.println("Starting thread:"+t.getName());
 		}

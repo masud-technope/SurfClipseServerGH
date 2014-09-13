@@ -53,15 +53,22 @@ public class SOVoteScore {
 	
 	protected long get_question_ID(String resultURL)
 	{
-		if(!resultURL.contains("stackoverflow.com"))return 0;
-		//code for getting question id
-		//resultURL="http://stackoverflow.com/questions/17101138/how-would-i-fix-this-error-java-lang-object-cannot-be-cast-to-java-lang-string";
-		int end_limit=resultURL.lastIndexOf('/');
-		String tempStr=resultURL.substring(0,end_limit);
-		int end_limit2=tempStr.lastIndexOf('/');
-		String questIDStr=tempStr.substring(end_limit2+1, end_limit);
-		//System.out.println(questIDStr);
-		return Long.parseLong(questIDStr);		
+		int number = 0;
+		if (!resultURL.contains("stackoverflow.com"))
+			return 0;
+		// code for getting question id
+		// resultURL="http://stackoverflow.com/questions/17101138/how-would-i-fix-this-error-java-lang-object-cannot-be-cast-to-java-lang-string";
+		int end_limit = resultURL.lastIndexOf('/');
+		String tempStr = resultURL.substring(0, end_limit);
+		int end_limit2 = tempStr.lastIndexOf('/');
+		//String questIDStr = tempStr.substring(end_limit2 + 1, end_limit);
+		try {
+			number = Integer.parseInt(tempStr.substring(end_limit2 + 1,
+					end_limit));
+		} catch (Exception exc) {
+		}
+		// System.out.println(questIDStr);
+		return number;	
 	}
 	
 	
@@ -150,7 +157,7 @@ public class SOVoteScore {
 		// TODO Auto-generated method stub
 		SOVoteScore svscore=new SOVoteScore(new ArrayList<Result>());
 		//svscore.get_question_ID("some url");
-		String resultURL="http://stackoverflow.com/questions/3177733/how-to-avoid-java-code-in-jsp-files";
+		String resultURL="http://stackoverflow.com/questions/20047152/java-util-concurrent-executionexception-java-lang-outofmemoryerror-permgen-spa";
 		long votes=svscore.collect_SO_votes(resultURL);
 		System.out.println(votes);
 

@@ -38,8 +38,11 @@ public class GoogleJSONDecoder {
 				
 				//creating object
 				Result myresult=new Result();
+				
 				//title
-				myresult.title=jsobj.get("titleNoFormatting").toString();
+				String title=jsobj.get("titleNoFormatting").toString();
+				title=title.replaceAll("\\<.*?>","");
+				myresult.title=title;
 				//System.out.println(jsobj.get("titleNoFormatting"));
 				
 				String content=jsobj.get("content").toString();
@@ -48,7 +51,6 @@ public class GoogleJSONDecoder {
 				myresult.description=content;
 				//URL
 				myresult.resultURL=jsobj.get("unescapedUrl").toString();
-				
 				//System.out.println(content);
 				//System.out.println(jsobj.get("unescapedUrl"));
 				//System.out.println();	

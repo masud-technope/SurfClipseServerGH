@@ -5,4 +5,6 @@ public class StaticData {
 	//public static String Dataset_Base="D:/My MSc/Thesis Works/IDE_Based_Search_Recommendation/Dataset";
 	public static String Dataset_Base="C:/MyWorks/Thesis Works/IDE_Based_Search_Recommendation/Dataset";
 	public static String Lucene_Data_Base="C:/MyWorks/Thesis Works/IDE_Based_Search_Recommendation/LuceneDataset";
+	//public static String Lucene_Data_Base="D:/My MSc/Thesis Works/IDE_Based_Search_Recommendation/LuceneDatsaset";
+	public static String QCDataset="C:/MyWorks/Thesis Works/IDE_Based_Search_Recommendation/QueryClipseDataset";
 }

@@ -8,11 +8,9 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-
 import core.Result;
 import core.StaticData;
 import core.SurfClipseSearch;
-
 import utility.ResultEntryMerger;
 
 public class SResultIndexBuilder {
@@ -57,7 +55,6 @@ public class SResultIndexBuilder {
 	protected void build_single_sresult_index(int key)
 	{
 		int count=0;
-	
 			int mykey=key;
 			String searchQuery=this.queryMap.get(key);
 			//now perform the search and collect results
@@ -75,11 +72,10 @@ public class SResultIndexBuilder {
 			}
 	}
 	
-	
 	protected int save_search_results(int mykey, ArrayList<Result> list)
 	{
 		int succeed=0;
-		String outFile=StaticData.Lucene_Data_Base+"/completeds/sclipseIndex10/"+mykey+".ser";
+		String outFile=StaticData.Lucene_Data_Base+"/completeds/sclipseIndex/"+mykey+".ser";
 		try
 		{
 		FileOutputStream fstream=new FileOutputStream(new File(outFile));
@@ -102,7 +98,7 @@ public class SResultIndexBuilder {
 	{
 		//code for loading the search result index
 		ArrayList<Result> merged=new ArrayList<>();
-		String file=StaticData.Lucene_Data_Base+"/completeds/sclipseIndextp/"+key+".ser";
+		String file=StaticData.Lucene_Data_Base+"/completeds/sclipseIndex/"+key+".ser";
 		try
 		{
 		FileInputStream fstream=new FileInputStream(new File(file));
@@ -198,6 +194,9 @@ public class SResultIndexBuilder {
 		ArrayList<Integer> culprits=new ArrayList<>();
 		for(Integer key:this.solutionMap.keySet())
 		{
+			int _key=key.intValue();
+			//if(_key>84)continue;
+			
 			ArrayList<String> solList=this.solutionMap.get(key);
 			ArrayList<Result> entries=load_sresult_index(key.intValue());
 			//now check
@@ -213,7 +212,6 @@ public class SResultIndexBuilder {
 				}
 			}
 			if(found==0)culprits.add(key);
-			
 		}
 		System.out.println("Optimally solution can be found:"+solfound);
 		//the culprits whose solution cant be found
@@ -230,10 +228,19 @@ public class SResultIndexBuilder {
 		// TODO Auto-generated method stub
 		SResultIndexBuilder builder=new SResultIndexBuilder();
 		
+		//building the corpus
 		//builder.build_sresult_index();
-		//builder.build_single_sresult_index(36);
-		//builder.load_sresult_index(1);
+		/*try{
+		for(int i=85;i<=150;i++) 
+		builder.build_single_sresult_index(i);
+		Thread.sleep(3000);
+		}catch(Exception exc){
+			
+		}*/
+		 
+		//builder.load_sresult_index(16);
 		
+		//getting how optimal the solution is
 		builder.get_optimal_performance();
 
 	}

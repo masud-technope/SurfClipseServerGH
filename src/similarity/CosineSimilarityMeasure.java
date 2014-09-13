@@ -1,5 +1,4 @@
 package similarity;
-import java.awt.image.TileObserver;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +7,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.StringTokenizer;
 import stemmer.Stemmer;
+import utility.MyTokenizer;
 
 public class CosineSimilarityMeasure {
 
@@ -15,8 +15,8 @@ public class CosineSimilarityMeasure {
 	 * @param args
 	 */
 	//titles
-	String title1;
-	String title2;
+	String title1=new String();
+	String title2=new String();
 	double cosine_measure=0;
 	
 	//Hash sets
@@ -56,8 +56,14 @@ public class CosineSimilarityMeasure {
 		return tokens;
 	}
 	
+	protected ArrayList<String> getTokenized_text_content_granularized(String content)
+	{
+		MyTokenizer myTokenizer=new MyTokenizer(content);
+		return myTokenizer.tokenize_text_item();
+	}
 	
-	public double get_cosine_similarity_score()
+	
+	public double get_cosine_similarity_score(boolean granularized)
 	{
 		//code for getting the cosine similarity score
 		try
@@ -65,13 +71,17 @@ public class CosineSimilarityMeasure {
 			if(title1.isEmpty() || title1==null)return 0;
 			if(title2.isEmpty() || title2==null)return 0;
 			
-			ArrayList<String> parts1 = this.getTokenized_text_content(title1);
-			ArrayList<String> parts2 = this.getTokenized_text_content(title2);
+			ArrayList<String> parts1 =granularized==true? this.getTokenized_text_content_granularized(title1):  
+				this.getTokenized_text_content(title1);
+			ArrayList<String> parts2 = granularized==true? this.getTokenized_text_content_granularized(title2):  
+				this.getTokenized_text_content(title2);
 
 			Stemmer my_stemmer=new Stemmer();
 			
 			for (String str : parts1) {
+				
 				str=my_stemmer.stripAffixes(str);
+				if(!str.isEmpty()){
 				set1.add(str);
 				if (!map1.containsKey(str))
 					map1.put(str, new Integer(1));
@@ -80,12 +90,13 @@ public class CosineSimilarityMeasure {
 					int count=Integer.parseInt(map1.get(str).toString());
 					count++;
 					map1.put(str, new Integer(count));
-				}
+				}}
 			}
 			
 			for (String str : parts2) {
 				str=my_stemmer.stripAffixes(str);
 				set2.add(str);
+				if(!str.isEmpty()){
 				if (!map2.containsKey(str))
 					map2.put(str, new Integer(1));
 				else
@@ -93,7 +104,7 @@ public class CosineSimilarityMeasure {
 					int count=Integer.parseInt(map2.get(str).toString());
 					count++;
 					map2.put(str, new Integer(count));
-				}
+				}}
 			}
 			
 			//show extracted tokens
@@ -140,7 +151,7 @@ public class CosineSimilarityMeasure {
 			
 			
 		}catch(Exception exc){
-			exc.printStackTrace();
+			//exc.printStackTrace();
 		}
 		//returning cosine ration
 		return cosine_measure;
@@ -178,8 +189,8 @@ public class CosineSimilarityMeasure {
 		String title1=load_text_content("stack.txt");
 		String title2=load_text_content("stack2.txt");
 		CosineSimilarityMeasure measure=new CosineSimilarityMeasure(title1, title2);
-		double similarity=measure.get_cosine_similarity_score();
-		System.out.println("Similarity:"+ similarity);
+		double similarity=measure.get_cosine_similarity_score(true);
+		System.out.println("Similarity score:"+ similarity);
 	}
 
 }

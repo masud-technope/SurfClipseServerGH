@@ -25,8 +25,10 @@ public class MyTokenizer {
 		while (tokenizer.hasMoreTokens()) {
 			String token = tokenizer.nextToken();
 			token.trim();
+			
 			if (!token.isEmpty()) {
-				tokens.add(token);
+				ArrayList<String> smalltokens=process_text_item(token);
+				tokens.addAll(smalltokens);
 			}
 		}
 		return tokens;
@@ -123,6 +125,29 @@ public class MyTokenizer {
 		return modified.trim();
 	}
 	
+	protected static ArrayList<String> process_text_item(String bigToken)
+	{
+		//code for processing big tokens
+		ArrayList<String> modified=new ArrayList<>();
+		try{
+			String[] parts=org.apache.commons.lang.StringUtils.splitByCharacterTypeCamelCase(bigToken);
+			for (String part : parts) {
+				String[] segments = part.split("\\.");
+				if (segments.length == 0)
+					modified.add(part);
+				else {
+					for (String segment : segments) {
+						if(!segment.isEmpty() && segment.length()>=2)
+						modified.add(segment);
+					}
+				}
+			}
+		}catch(Exception exc){
+		}
+		//returning big token
+		return modified;
+	}
+	
 	protected static ArrayList<String> process_source_token(String token)
 	{
 		//code for processing source code token
@@ -143,15 +168,5 @@ public class MyTokenizer {
 			}
 		}
 		return modified;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 }

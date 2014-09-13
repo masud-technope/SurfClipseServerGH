@@ -112,7 +112,8 @@ public class DownloadResultEntryContent {
 			URL u = new URL(resultURL);
 			HttpURLConnection connection = (HttpURLConnection) u
 					.openConnection();
-			connection.setConnectTimeout(5000); //setting connect time out
+			connection.setConnectTimeout(2000); //setting connect time out
+			connection.setReadTimeout(2000); //setting read time out
 			connection.addRequestProperty("Content-Type",
 					"text/html;charset=utf-8");
 			connection.setRequestMethod("GET");
@@ -198,6 +199,7 @@ public class DownloadResultEntryContent {
 		blackList.add("http://www.docjar.com/jar_detail/osgi-3.5.0-v20090520.jar.html");
 		blackList.add("http://mavenhub.com/mvn/central/org.ow2.jasmine/mapping/1.0.1");
 		blackList.add("http://www.findjar.com/index.x?query=invalidcontentexception");
+		blackList.add("pastebin.com");
 		
 		
 		String[] extension = new String[] { "pdf", "txt", "doc", "docx", "jar",

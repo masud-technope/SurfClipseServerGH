@@ -91,7 +91,7 @@ public class GoogleAPI {
 		// TODO Auto-generated method stub
 		try
 		{
-		     for(int start=1;start<25;start+=10)
+		     for(int start=1;start<15;start+=10)
 		     {
 		    	 String responseBody=get_the_search_results1(start, main_query);
 		    	 //System.out.println(responseBody);

@@ -34,11 +34,17 @@ public class YahooJSONDecoder {
 		  {
 		  JSONObject resultObject = (JSONObject)ja.get(i);
 		  Result resultItem=new Result();
+		  //title
 		  String title=resultObject.get("title").toString();
 		  title=title.replaceAll("\\<.*?>","");;
 		  resultItem.title=title;
-          resultItem.resultURL=resultObject.get("url").toString();
-          resultItem.description=resultObject.get("abstract").toString();
+          //URL
+		  resultItem.resultURL=resultObject.get("url").toString();
+          //description
+		  String description=resultObject.get("abstract").toString();
+		  description=description.replaceAll("\\<.*?>","");
+		  resultItem.description=description;
+		  
           searchResult.add(resultItem);
 		  }
 		}catch(Exception exc){}

@@ -2,6 +2,8 @@ package scoring;
 
 import java.util.ArrayList;
 
+import codestack.MyExceptionManager;
+
 import utility.DownloadResultEntryContent;
 
 import core.Result;
@@ -59,9 +61,10 @@ public class ScoreCalculator implements Runnable {
 			// calculate the scores
 			//content similarity matching
 			try {
+				String currentException=MyExceptionManager.getCurrentExceptionName(this.stackTrace);
 				// title matching score: it downloads codestacks and textcontent 
 				titleMatcher = new ResultTitleMatcher(this.segmentedResults,
-						queryTitle);
+						queryTitle, currentException);
 				this.segmentedResults = titleMatcher.calculate_title_match_score();
 				System.out.println("Title matching score done by"+Thread.currentThread().getName());
 			} catch (Exception e) {
@@ -69,7 +72,6 @@ public class ScoreCalculator implements Runnable {
 				e.printStackTrace();
 			}
 			
-		
 			//context similarity matching
 			try {
 				if(stackTrace!=null && !stackTrace.isEmpty())
@@ -102,26 +104,14 @@ public class ScoreCalculator implements Runnable {
 				e.printStackTrace();
 			}
 			
-			try
-			{
-				if(recentPageData!=null && !recentPageData.isEmpty())
-				{
-					this.historyRecencyScore=new HistoryRecencyScore(this.segmentedResults, recentPageData);
-					this.segmentedResults=historyRecencyScore.load_history_scores();
-					System.out.println("Recency score provided....by"+Thread.currentThread().getName());
-				}
-			}catch(Exception exc){
-				System.err.println("Exception thrown by RecentHistoryMatcher:"+exc.getMessage());
-				exc.printStackTrace();
-			}
-			
 			//popularity calculation
 			try {
 				// Alexa compete rank score
-				alexaCompeteScorer = new AlexaCompeteScore(this.segmentedResults);
+				//commented for testing
+				/*alexaCompeteScorer = new AlexaCompeteScore(this.segmentedResults);
 				this.segmentedResults = alexaCompeteScorer
 						.get_alexa_compete_rank_score();
-				System.out.println("Alexa compete score done by "+Thread.currentThread().getName());
+				System.out.println("Alexa compete score done by "+Thread.currentThread().getName());*/
 			} catch (Exception e) {
 				// TODO: handle exception
 				System.err.println("Exception thrown by Alexa Scores:"+e.getMessage());
@@ -130,6 +120,7 @@ public class ScoreCalculator implements Runnable {
 
 			try {
 				// SO vote score
+				//commented for testing
 				so_vote_Score = new SOVoteScore(this.segmentedResults);
 				this.segmentedResults = so_vote_Score.get_SO_vote_score();
 				System.out.println("SO Vote score done by"+Thread.currentThread().getName());

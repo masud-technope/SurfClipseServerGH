@@ -24,7 +24,7 @@ public class SOAPIDemo {
 		searchQuery=main_query;	//JOptionPane.showInputDialog(null,"Enter your question or keyword");
 		String charset="UTF-8";
 		//String urlString="http://api.stackoverflow.com/1.1/search?intitle="+URLEncoder.encode(searchQuery,charset);
-		String urlString="https://api.stackexchange.com/2.1/search/advanced?key=CSU*LgYG4mIzQI7WLit4XA((&order=desc&site=stackoverflow&paresize=30&sort=relevance&q="+URLEncoder.encode(searchQuery,charset);
+		String urlString="https://api.stackexchange.com/2.1/search/advanced?key=CSU*LgYG4mIzQI7WLit4XA((&order=desc&site=stackoverflow&pagesize=20&sort=relevance&q="+URLEncoder.encode(searchQuery,charset);
 		URL url=new URL(urlString);
 		InputStream soStream=url.openStream();
 		try
@@ -68,6 +68,7 @@ public class SOAPIDemo {
 				//Thread.sleep(3000);
 		} catch (Exception exc) {
 		}
+		
 		
 	}
 	

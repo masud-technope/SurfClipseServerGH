@@ -1,6 +1,5 @@
 package scoring;
 
-
 import java.io.File;
 import java.io.FileWriter;
 import java.text.DecimalFormat;
@@ -10,6 +9,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import utility.DownloadResultEntryContent;
 import core.Result;
+import core.ScoreWeights;
 import core.StaticData;
 
 
@@ -50,7 +50,7 @@ public class ResultScoreManager {
 	
 	public void calculate_relative_scores()
 	{
-		try {
+		/*try {
 			// ALEXA COMPETE rank score
 			alexaCompeteScorer = new AlexaCompeteScore(this.Final_Results);
 			this.Final_Results = alexaCompeteScorer
@@ -59,7 +59,8 @@ public class ResultScoreManager {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-		}
+			
+		}*/
 
 		try {
 			// SO vote score
@@ -85,69 +86,85 @@ public class ResultScoreManager {
 	
 	public ArrayList<Result> prerpare_final_score()
 	{
-		
-		//different heuristic scores
-		double page_title_weight=0.5;
-		double code_stack_weight=0.3;
-		double page_body_weight=0.2;
-		double stack_trace_weight=0.6;
-		double code_context_weight=0.4;
-		/*if(this.code_context.isEmpty() || this.code_context==null)
-		{
-			code_context_weight=0;
-			stack_trace_weight=1.0;
-		}*/
-		double recent_history_weight=0.0; //discarded for the purpose of testing
-		double alexa_rank_weight=0.3;
-		double so_vote_weight=0.7;
-		
-		//accepted weights
-		double content_weight=0.35;
-		double context_weight=0.85;
-		double popularity_weight=0.20;
-		double result_confidence_weight=0.10;
-		
 		//code preparing the final score
 		for(Result result:this.Final_Results)
 		{	
-			//double popularity_score=0;
-			//double content_score=0;
-			//double context_score=0;
-			//double se_recommendation_score=0;
 			try
 			{
 				//content
-				result.content_score=(result.title_title_MatchScore*page_title_weight+
-						result.title_codestack_MathScore*code_stack_weight+result.title_content_MatchScore*page_body_weight); //title 2 body deleted
-				//context
-				result.context_score=(result.stackTraceMatchScore*stack_trace_weight+
-						result.sourceContextMatchScore*code_context_weight+result.recentHistoryScore*recent_history_weight); //recency score will be added
-				//popularity
-				result.popularity_score=(result.SOVoteScore*so_vote_weight+result.AlexaCompeteRankScore*alexa_rank_weight);
+				result.content_score=result.title_title_MatchScore*ScoreWeights.TITLE_WEIGHT+ 
+						result.title_description_MatchScore*ScoreWeights.DESC_WEIGHT+
+						result.title_codestack_MathScore*ScoreWeights.CODESTACK_WEIGHT +
+						result.title_content_MatchScore*ScoreWeights.CONTENT_WEIGHT; 
 				
-				//result confidence
-				//result_confidence=result.search_result_confidence>=1?1:result.search_result_confidence;
-				//result.search_result_confidence=1.0;// result_confidence;
-				//result.search_result_confidence=result_confidence*result.search_result_confidence;
+				//context
+				result.context_score=result.stackTraceContentMatchScore* ScoreWeights.CONT_CXT_WEIGHT+
+						result.stackTraceStructuralMatchScore* ScoreWeights.STRUCT_CXT_WEIGHT+
+						result.sourceContextMatchScore*ScoreWeights.STRUCT_CXT_WEIGHT+
+						result.recentHistoryScore* ScoreWeights.HISTORY_CXT_WEIGHT; //history score discarded right now
+				
+				//popularity
+				result.popularity_score=result.SOVoteScore*ScoreWeights.SOVOTE_WEIGHT+
+						result.AlexaCompeteRankScore*ScoreWeights.ALEXA_WEIGHT;
+				
+				//confidence score is already calculated
 				
 				//different total scores
-				result.totalScore_content_context=content_weight*result.content_score+ context_weight*result.context_score;
-				result.totalScore_content_popularity=content_weight*result.content_score+popularity_weight*result.popularity_score;
-				result.totalScore_context_popularity=context_weight*result.context_score+popularity_weight*result.popularity_score; 
+				result.totalScore_content_context=result.content_score*ScoreWeights.CONTENT_RELEVANCE_WEIGHT + result.context_score*ScoreWeights.CONTEXT_RELEVANCE_WEIGHT;
+				result.totalScore_content_popularity=result.content_score*ScoreWeights.CONTENT_RELEVANCE_WEIGHT+result.popularity_score*ScoreWeights.POPULARITY_WEIGHT;
+				result.totalScore_context_popularity=result.context_score*ScoreWeights.CONTEXT_RELEVANCE_WEIGHT+result.popularity_score*ScoreWeights.POPULARITY_WEIGHT; 
 				
+				//final scores
+				result.totalScore_content_context_popularity=result.content_score*ScoreWeights.CONTENT_RELEVANCE_WEIGHT+
+						result.context_score*ScoreWeights.CONTEXT_RELEVANCE_WEIGHT+
+						result.popularity_score*ScoreWeights.POPULARITY_WEIGHT+
+						result.search_result_confidence*ScoreWeights.CONFIDENCE_WEIGHT;
 				
-				result.totalScore_content_context_popularity=result.content_score*content_weight+result.context_score*context_weight
-				+
-				result.popularity_score*popularity_weight+result.search_result_confidence*result_confidence_weight;
 			}catch(Exception exc)
 			{
 				exc.printStackTrace();
 			}
 		}
 		
+		//normalize the results
+		normalizeResultScores();
+		
 		//returning the result
 		return Final_Results;
 	}
+	
+	protected void normalizeResultScores()
+	{
+		//code for normalizing the result scores
+		double maxScore=0;
+		double maxContentScore=0;
+		double maxContextScore=0;
+		double maxConfidence=0;
+		
+		for(Result result:this.Final_Results){
+			if(result.totalScore_content_context_popularity>maxScore){
+				maxScore=result.totalScore_content_context_popularity;
+			}
+			if(result.content_score>maxContentScore){
+				maxContentScore=result.content_score;
+			}
+			if(result.context_score>maxContextScore){
+				maxContextScore=result.context_score;
+			}
+			if(result.search_result_confidence>maxConfidence){
+				maxConfidence=result.search_result_confidence;
+			}
+		}
+		
+		//now normalize the scores
+		for(Result result:this.Final_Results){
+			result.totalScore_content_context_popularity=result.totalScore_content_context_popularity/maxScore;
+			result.content_score=result.content_score/maxContentScore;
+			result.context_score=result.context_score/maxContextScore;
+			result.search_result_confidence=result.search_result_confidence/maxConfidence;
+		}
+	}
+	
 	
 	
 	public ArrayList<Result> sort_the_result_ct()
@@ -239,17 +256,18 @@ public class ResultScoreManager {
 	    	else return 0;
 	    }
 	}
-	
-	
+
 	public class CustomComparator_ctxp implements Comparator<Result> {
 	    @Override
 	    public int compare(Result o1, Result o2) {
-	    	if(o1.totalScore_content_context_popularity>o2.totalScore_content_context_popularity)return -1;
-	    	else if(o1.totalScore_content_context_popularity<o2.totalScore_content_context_popularity)return 1;
-	    	else return 0;
+	    	Double score1=new Double(o1.totalScore_content_context_popularity);
+	    	Double score2=new Double(o2.totalScore_content_context_popularity);
+	    	return score2.compareTo(score1);
+	    	//if(o1.totalScore_content_context_popularity>o2.totalScore_content_context_popularity)return -1;
+	    	//else if(o1.totalScore_content_context_popularity<o2.totalScore_content_context_popularity)return 1;
+	    	//else return 0;
 	    }
 	}
-	
 	
 	protected double format_the_double(double unformatted)
 	{

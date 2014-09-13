@@ -70,7 +70,7 @@ public class SurfCLTester {
 		//code for collecting google solutions
 		try
 		{
-			String path=StaticData.Lucene_Data_Base+"/completeds/sclipsep"; //sclipse
+			String path=StaticData.Lucene_Data_Base+"/completeds/results/doc50"; //sclipse
 			File f=new File(path);
 			if(f.isDirectory())
 			{
@@ -79,7 +79,7 @@ public class SurfCLTester {
 				{
 					
 					String key=f1.getName();
-					if(!new File(newQuery+"/"+key).exists())continue;
+					//if(!new File(newQuery+"/"+key).exists())continue;
 					
 					try
 					{
@@ -178,7 +178,7 @@ public class SurfCLTester {
 		
 		for(String key:this.scSolution.keySet())
 		{
-			if(!new File(newQuery+"/"+key).exists())continue;
+			//if(!new File(newQuery+"/"+key).exists())continue;
 			
 			//System.out.println(key);
 			ArrayList<String> glist=this.scSolution.get(key);
@@ -298,7 +298,6 @@ public class SurfCLTester {
 			}
 		}
 		return fff_position;
-		
 	}
 	
 	protected double get_receiprocal_rank(int K, ArrayList<String> googleList, ArrayList<String> solutionList)
@@ -362,17 +361,15 @@ public class SurfCLTester {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		SurfCLTester tester=new SurfCLTester();
-		int K=30;
+		int K=10;
 		tester.collect_org_solutions();
 		tester.collect_google_solutions();
 		
 		tester.calculate_mean_avg_precision(K);
 		tester.calculate_mean_precision(K);
 		tester.calculate_mean_recall(K);
-		tester.calculate_avg_fff_position(K);
-		tester.calculate_avg_ftp_rank(K);
+		//tester.calculate_avg_fff_position(K);
+		//tester.calculate_avg_ftp_rank(K);
 		System.out.println("Total solution: "+tester.total_solution+", Solution retrieved:"+tester.solution_retrieved);
-
 	}
-
 }

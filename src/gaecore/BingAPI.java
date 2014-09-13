@@ -35,7 +35,7 @@ public class BingAPI {
 	    //String clientKey="51f12a6c-c88b-40c9-b127-c2ccef0f5a4a";
 	    String query=main_query;//JOptionPane.showInputDialog(null,"Enter your search query");
 	    String charset="UTF-8";
-	    String searchURL="https://api.datamarket.azure.com/Bing/Search/Web?Query='"+URLEncoder.encode(query,charset)+"'&$format=JSON&$top=30";	
+	    String searchURL="https://api.datamarket.azure.com/Bing/Search/Web?Query='"+URLEncoder.encode(query,charset)+"'&$format=JSON&$top=20";	
 	    URL url=new URL(searchURL);
 	    HttpURLConnection urlConn=(HttpURLConnection)url.openConnection();
 	    String basic_auth = new String(Base64.encodeBase64((accountKey + ":" + accountKey).getBytes()));

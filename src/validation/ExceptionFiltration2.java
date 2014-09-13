@@ -3,9 +3,7 @@ package validation;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Scanner;
-
 import com.google.common.io.Files;
-
 import similarity.CosineSimilarityMeasure;
 import core.StaticData;
 
@@ -71,7 +69,7 @@ public class ExceptionFiltration2 {
 				String msg2=this.mymap.get(key2);
 				//now perform cosine similarities
 				CosineSimilarityMeasure cos_measure=new CosineSimilarityMeasure(msg1, msg2);
-				double cos_score=cos_measure.get_cosine_similarity_score();
+				double cos_score=cos_measure.get_cosine_similarity_score(false);
 				if(cos_score>.80)
 				{	
 					if(!key2.equals(key1))

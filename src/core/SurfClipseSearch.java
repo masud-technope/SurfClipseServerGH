@@ -65,11 +65,6 @@ public class SurfClipseSearch {
 			this.Yahoo_Results=new ArrayList<Result>();
 			this.SO_Results=new ArrayList<Result>();
 			
-			/*soAPI=new SOAPIDemo();
-			googAPI=new GoogleAPI();
-			bingAPI=new BingAPI();
-		    yahooAPI=new YahooAPI2();*/
-			
 		    DataCollectorThreadManager dataCollector=new DataCollectorThreadManager(this.searchQuery);
 		    int resultPulledfrom=dataCollector.collect_search_data();
 		    System.out.println("Result collected from:"+resultPulledfrom);
@@ -78,29 +73,9 @@ public class SurfClipseSearch {
 		    this.Google_Results=dataCollector.Google_Results;
 		    this.Bing_Results=dataCollector.Bing_Results;
 		    this.Yahoo_Results=dataCollector.Yahoo_Results;
-		    //this.SO_Results=dataCollector.SO_Results;
+		    this.SO_Results=dataCollector.SO_Results;
 		    }
 		    
-		    
-			/*this.SO_Results=soAPI.find_SO_results(searchQuery);
-			//my_big_array.addAll(SO_Results);
-			System.out.println("From StackOverflow: "+SO_Results.size()+ " results");			
-			this.Google_Results=googAPI.find_Google_Results(searchQuery);
-			//my_big_array.addAll(Google_Results);
-			System.out.println("From Google: "+Google_Results.size()+ " results");
-			this.Bing_Results=bingAPI.find_Bing_Results(searchQuery);
-			//my_big_array.addAll(Bing_Results);
-			System.out.println("From Bing: "+Bing_Results.size()+ " results");
-			this.Yahoo_Results=yahooAPI.get_Yahoo_Results(searchQuery);
-			//my_big_array.addAll(Yahoo_Results);
-			System.out.println("From Yahoo: "+Yahoo_Results.size()+ " results");
-			
-			
-			//initiating the sort map
-			this.sortedResult=new Hashtable<String, Integer>();*/
-			
-			//here should be the result ranking and sorting
-			
 		}catch(Exception exc){
 			exc.printStackTrace();
 		}	
@@ -134,7 +109,6 @@ public class SurfClipseSearch {
 	        }});
 	       return l;
 	}
-	
 	
 	//code for showing the search results
 	public void show_the_search_results(ArrayList my_big_array)
@@ -171,10 +145,7 @@ public class SurfClipseSearch {
 		}catch(Exception exc){
 		}
 	}
-	
-	
-	
-	
+
 	public static void main(String args[])
 	{
 		//code for surfing for helps
